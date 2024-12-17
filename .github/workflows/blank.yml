@@ -11,27 +11,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the documentation repository
+      # Step 1: Checkout the documentation repository (main-docs)
       - name: Checkout documentation repository
         uses: actions/checkout@v3 # Checkout the api_documentation_repository
         with:
           repository: "ganesh-bruno/main-docs" # The documentation repository
-          token: ${{ secrets.GH_TOKEN }} # Use GitHub Token for authentication
+          token: ${{ secrets.GH_TOKEN }} # Use the secret stored in GitHub Secrets
 
-      # Step 2: Clone Project 1 and Project 2 repositories
+      # Step 2: Clone Project 1 repository
       - name: Clone Project 1 repository
         run: |
-          git clone https://github.com/ganesh-bruno/project-1.git
+          git clone https://github.com/ganesh-bruno/project-1.git  # Clone Project 1
           cd project-1
-          cp -R api_docs/bruno_files ../project1_api_docs/  # Copy the bruno files into the appropriate folder in the docs repo
+          if [ -d "api-docs" ]; then  # Check if the api-docs folder exists
+            cp -R api-docs ../project1_api_docs/  # Copy the api-docs folder to the documentation repo
+          else
+            echo "api-docs directory not found in Project 1"  # Error message if api-docs folder doesn't exist
+          fi
 
+      # Step 3: Clone Project 2 repository
       - name: Clone Project 2 repository
         run: |
-          git clone https://github.com/ganesh-bruno/project-2.git
+          git clone https://github.com/ganesh-bruno/project-2.git  # Clone Project 2
           cd project-2
-          cp -R api_docs/bruno_files ../project2_api_docs/  # Copy the bruno files into the appropriate folder in the docs repo
+          if [ -d "api-docs" ]; then  # Check if the api-docs folder exists
+            cp -R api-docs ../project2_api_docs/  # Copy the api-docs folder to the documentation repo
+          else
+            echo "api-docs directory not found in Project 2"  # Error message if api-docs folder doesn't exist
+          fi
 
-      # Step 3: Commit and push the changes back to the documentation repository
+      # Step 4: Commit and push the changes
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
@@ -40,4 +49,4 @@ jobs:
           git commit -m "Sync API docs from Project 1 and Project 2"
           git push origin main  # Push the changes to the main branch of the documentation repo
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Make sure to use the GITHUB_TOKEN to authenticate the push
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Use the secret stored in GitHub Secrets
