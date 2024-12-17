@@ -1,0 +1,43 @@
+name: Sync API Docs
+
+on:
+  push:
+    branches:
+      - main # Trigger the action when changes are pushed to the main branch.
+
+jobs:
+  sync-api-docs:
+    name: Sync API Documentation for Project 1 and Project 2
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the documentation repository
+      - name: Checkout documentation repository
+        uses: actions/checkout@v3 # Checkout the api_documentation_repository
+        with:
+          repository: "ganesh-bruno/main-docs" # The documentation repository
+          token: ${{ secrets.GH_TOKEN }} # Use GitHub Token for authentication
+
+      # Step 2: Clone Project 1 and Project 2 repositories
+      - name: Clone Project 1 repository
+        run: |
+          git clone https://github.com/ganesh-bruno/project-1.git
+          cd project-1
+          cp -R api_docs/bruno_files ../project1_api_docs/  # Copy the bruno files into the appropriate folder in the docs repo
+
+      - name: Clone Project 2 repository
+        run: |
+          git clone https://github.com/ganesh-bruno/project-2.git
+          cd project-2
+          cp -R api_docs/bruno_files ../project2_api_docs/  # Copy the bruno files into the appropriate folder in the docs repo
+
+      # Step 3: Commit and push the changes back to the documentation repository
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Sync API docs from Project 1 and Project 2"
+          git push origin main  # Push the changes to the main branch of the documentation repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # Make sure to use the GITHUB_TOKEN to authenticate the push
