@@ -24,7 +24,7 @@ jobs:
           git clone https://github.com/ganesh-bruno/project-1.git  # Clone Project 1
           cd project-1
           if [ -d "api-docs" ]; then  # Check if the api-docs folder exists
-            cp -R api-docs ../project1_api_docs/  # Copy the api-docs folder to the documentation repo
+            cp -r api-docs ../project1_api_docs/  # Copy the api-docs folder to the documentation repo
           else
             echo "api-docs directory not found in Project 1"  # Error message if api-docs folder doesn't exist
           fi
@@ -35,7 +35,7 @@ jobs:
           git clone https://github.com/ganesh-bruno/project-2.git  # Clone Project 2
           cd project-2
           if [ -d "api-docs" ]; then  # Check if the api-docs folder exists
-            cp api-docs ../project2_api_docs/  # Copy the api-docs folder to the documentation repo
+            cp -r api-docs ../project2_api_docs/  # Copy the api-docs folder to the documentation repo
           else
             echo "api-docs directory not found in Project 2"  # Error message if api-docs folder doesn't exist
           fi
